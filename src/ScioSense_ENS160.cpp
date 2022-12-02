@@ -373,8 +373,7 @@ bool ScioSense_ENS160::set_envdata210(uint16_t t, uint16_t h) {
 /**************************************************************************/
 
 void ScioSense_ENS160::_i2c_init() {
-	if (this->_sdaPin != this->_sclPin) Wire.begin(this->_sdaPin, this->_sclPin);
-	else Wire.begin();
+	Wire.begin();
 }
 
 /**************************************************************************/
