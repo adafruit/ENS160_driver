@@ -98,6 +98,7 @@
 class ScioSense_ENS160 {
 		
 	public:
+	    ScioSense_ENS160(TwoWire *i2c, u_int8_t slaveaddr = ENS160_I2CADDR_0);               				// Constructor using slave address (5A or 5B)
 	    ScioSense_ENS160(uint8_t slaveaddr = ENS160_I2CADDR_0);               				// Constructor using slave address (5A or 5B)
 		ScioSense_ENS160(uint8_t ADDR, uint8_t nCS, uint8_t nINT);       				// Constructor with pin definition
 		ScioSense_ENS160(uint8_t slaveaddr, uint8_t ADDR, uint8_t nCS, uint8_t nINT);  			// Constructor with slave address and pin definition
@@ -136,6 +137,7 @@ class ScioSense_ENS160 {
 		uint8_t				getMISR() 		{ return this->_misr; }			// Return status code of sensor
 
 	private:
+		TwoWire 			*_i2c;								// Pointer to I2C interface
 		uint8_t				_ADDR; 
 		uint8_t				_nINT; 
 		uint8_t				_nCS;
