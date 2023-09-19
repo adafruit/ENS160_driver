@@ -12,9 +12,17 @@
 #include "ScioSense_ENS160.h"
 #include "math.h"
 
+ScioSense_ENS160::ScioSense_ENS160(TwoWire *i2c, uint8_t slaveaddr) {
+	this->_slaveaddr = slaveaddr;
+	this->_i2c = i2c;	
+	this->_ADDR = 0; 
+	this->_nINT = 0; 
+	this->_nCS = 0;
+}
+
 ScioSense_ENS160::ScioSense_ENS160(uint8_t slaveaddr) {
 	this->_slaveaddr = slaveaddr;
-	
+	this->_i2c = &Wire;
 	this->_ADDR = 0; 
 	this->_nINT = 0; 
 	this->_nCS = 0;
@@ -22,7 +30,7 @@ ScioSense_ENS160::ScioSense_ENS160(uint8_t slaveaddr) {
 
 ScioSense_ENS160::ScioSense_ENS160(uint8_t ADDR, uint8_t nCS, uint8_t nINT) {
 	this->_slaveaddr = ENS160_I2CADDR_0;
-
+	this->_i2c = &Wire;
 	this->_ADDR = ADDR; 
 	this->_nINT = nINT; 
 	this->_nCS = nCS;
@@ -30,7 +38,7 @@ ScioSense_ENS160::ScioSense_ENS160(uint8_t ADDR, uint8_t nCS, uint8_t nINT) {
 
 ScioSense_ENS160::ScioSense_ENS160(uint8_t slaveaddr, uint8_t ADDR, uint8_t nCS, uint8_t nINT) {
 	this->_slaveaddr = slaveaddr;
-
+	this->_i2c = &Wire;
 	this->_ADDR = ADDR; 
 	this->_nINT = nINT; 
 	this->_nCS = nCS;
@@ -39,7 +47,7 @@ ScioSense_ENS160::ScioSense_ENS160(uint8_t slaveaddr, uint8_t ADDR, uint8_t nCS,
 // Function to redefine I2C pins
 void ScioSense_ENS160::setI2C(uint8_t sda, uint8_t scl) {
 	this->_sdaPin = sda;
-	this->_sclPin = scl;	
+	this->_sclPin = scl;
 }	
 
 // Init I2C communication, resets ENS160 and checks its PART_ID. Returns false on I2C problems or wrong PART_ID.
@@ -374,10 +382,10 @@ bool ScioSense_ENS160::set_envdata210(uint16_t t, uint16_t h) {
 
 void ScioSense_ENS160::_i2c_init() {
 #if defined(ESP32)
-	if (this->_sdaPin != this->_sclPin) Wire.begin(this->_sdaPin, this->_sclPin);
+	if (this->_sdaPin != this->_sclPin) _i2c->begin(this->_sdaPin, this->_sclPin);
 	else
 #endif
-	 Wire.begin();
+	 _i2c->begin();
 }
 
 /**************************************************************************/
@@ -404,14 +412,14 @@ uint8_t ScioSense_ENS160::read(uint8_t addr, uint8_t reg, uint8_t *buf, uint8_t 
 	while(pos < num){
 		
 		uint8_t read_now = min((uint8_t)32, (uint8_t)(num - pos));
-		Wire.beginTransmission((uint8_t)addr);
+		_i2c->beginTransmission((uint8_t)addr);
 		
-		Wire.write((uint8_t)reg + pos);
-		result = Wire.endTransmission();
-		Wire.requestFrom((uint8_t)addr, read_now);
+		_i2c->write((uint8_t)reg + pos);
+		result = _i2c->endTransmission();
+		_i2c->requestFrom((uint8_t)addr, read_now);
 		
 		for(int i=0; i<read_now; i++){
-			buf[pos] = Wire.read();
+			buf[pos] = _i2c->read();
 			pos++;
 		}
 	}
@@ -439,10 +447,10 @@ uint8_t ScioSense_ENS160::write(uint8_t addr, uint8_t reg, uint8_t *buf, uint8_t
 		Serial.println();
 	}
 	
-	Wire.beginTransmission((uint8_t)addr);
-	Wire.write((uint8_t)reg);
-	Wire.write((uint8_t *)buf, num);
-	uint8_t result = Wire.endTransmission();
+	_i2c->beginTransmission((uint8_t)addr);
+	_i2c->write((uint8_t)reg);
+	_i2c->write((uint8_t *)buf, num);
+	uint8_t result = _i2c->endTransmission();
 	return result;
 }
 
