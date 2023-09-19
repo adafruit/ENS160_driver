@@ -98,7 +98,7 @@
 class ScioSense_ENS160 {
 		
 	public:
-	    ScioSense_ENS160(TwoWire *i2c, u_int8_t slaveaddr = ENS160_I2CADDR_0);               				// Constructor using slave address (5A or 5B)
+	    ScioSense_ENS160(TwoWire *i2c, uint8_t slaveaddr = ENS160_I2CADDR_0);               				// Constructor using slave address (5A or 5B)
 	    ScioSense_ENS160(uint8_t slaveaddr = ENS160_I2CADDR_0);               				// Constructor using slave address (5A or 5B)
 		ScioSense_ENS160(uint8_t ADDR, uint8_t nCS, uint8_t nINT);       				// Constructor with pin definition
 		ScioSense_ENS160(uint8_t slaveaddr, uint8_t ADDR, uint8_t nCS, uint8_t nINT);  			// Constructor with slave address and pin definition
