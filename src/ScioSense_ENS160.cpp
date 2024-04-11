@@ -381,10 +381,8 @@ bool ScioSense_ENS160::set_envdata210(uint16_t t, uint16_t h) {
 /**************************************************************************/
 
 void ScioSense_ENS160::_i2c_init() {
-#if defined(ESP32)
 	if (this->_sdaPin != this->_sclPin) _i2c->begin(this->_sdaPin, this->_sclPin);
 	else
-#endif
 	 _i2c->begin();
 }
 
