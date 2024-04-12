@@ -62,6 +62,12 @@ reported (see also initCustomMode / addCustomStep)
 
 Returns true in case of success and false in case of any issues.
 
+> void setI2C(uint8_t sda, uint8_t scl)
+
+This functions lets you change the default i2c pins.
+
+It must be called before the _begin()_ method.
+
 > bool	initCustomMode(uint16_t stepNum)
 
 To be able ot use the custom mode, first it has to be initialized. The number of steps is required as input parameter. Each step has to be configured individually by calling *addCustomStep*. 
